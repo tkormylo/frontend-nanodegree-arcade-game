@@ -1,8 +1,13 @@
+function GetRandomNumber(maxValue) {
+  var randomNumber = Math.floor(Math.random() * maxValue);
+  return randomNumber;
+};
+
 // Entity object base class
-var Entity = function(spriteImg, xLoc, yLoc) {
+var Entity = function(spriteImg, x, y) {
   this.sprite = spriteImg;
-  this.x = xLoc;
-  this.y = yLoc;
+  this.x = x;
+  this.y = y;
 };
 
 // Entity objects base class
@@ -11,23 +16,31 @@ Entity.prototype.render = function() {
 };
 
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(sprite, x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    Entity.call(this, sprite, x, y);
+    this.sprite = sprite;
 };
 Enemy.prototype = Object.create(Entity.prototype);
 Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function(dt, randomSpeed) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    if (this.x <= 550) {
+      this.x = this.x + randomSpeed;
+    } else if (this.x >= 550) {
+      this.x = 0;
+    }
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -42,6 +55,7 @@ var Player = function(sprite, x, y) {
   Entity.call(this, sprite, x, y);
   this.sprite = sprite;
 };
+
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Player;
 Player.prototype.update = function() {
@@ -66,17 +80,15 @@ Player.prototype.handleInput = function(keyPressed) {
   }
 };
 
+var bugRowArray = [60, 140, 220];
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy();
+var enemy1 = new Enemy('images/enemy-bug.png', 0, bugRowArray[GetRandomNumber(3)]);
+var enemy2 = new Enemy('images/enemy-bug.png', 0, bugRowArray[GetRandomNumber(3)]);
 var player = new Player('images/char-boy.png', 200, 380);
-var allEnemies = [enemy1];
-
-console.log(player.sprite);
-console.log(player.x);
-console.log(player.y);
-
+var allEnemies = [enemy1, enemy2];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
