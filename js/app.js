@@ -61,7 +61,6 @@ Enemy.prototype.checkIfTouchingPlayer = function(enemyX, enemyY, playerX, player
   if (enemyY === playerY && (enemyX >= (playerX -40) && (enemyX <= (playerX + 40)))) {
     player.x = 200;
     player.y = 380;
-    console.log("***HIT!!***");
   }
 };
 
@@ -76,6 +75,11 @@ var Player = function(sprite, x, y) {
 Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Player;
 Player.prototype.update = function() {
+    // TSK: If player is in the water (player.y = -20) then reset player (death).
+    if (player.y === -20) {
+    player.x = 200;
+    player.y = 380;
+  }
 };
 
 
@@ -84,13 +88,14 @@ Player.prototype.update = function() {
 //      If the player position does not allow that move
 //      do not move the player.
 Player.prototype.handleInput = function(keyPressed) {
+
   if (keyPressed === 'left' && player.x > 50 && player.x <= 400) {
     player.x = player.x - 100;
   }
   else if (keyPressed === 'right' && player.x < 400) {
     player.x = player.x + 100;
   }
-  else if (keyPressed === 'up' && player.y > 60) {
+  else if (keyPressed === 'up' && player.y > -20) {
     player.y = player.y - 80;
   }
   else if (keyPressed === 'down' && player.y < 380) {
