@@ -1,5 +1,5 @@
-function GetRandomNumber(maxValue) {
-  var randomNumber = Math.floor(Math.random() * maxValue);
+function GetRandomNumber(min, max) {
+  var randomNumber = Math.floor(Math.random()*(max-min+1)+min);
   return randomNumber;
 };
 
@@ -16,14 +16,15 @@ Entity.prototype.render = function() {
 };
 
 // Enemies our player must avoid
-var Enemy = function(sprite, x, y) {
+var Enemy = function(_sprite, _speed, _x, _y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    Entity.call(this, sprite, x, y);
-    this.sprite = sprite;
+    this.sprite = _sprite;
+    this.speed = _speed;
+    Entity.call(this, _sprite, _x, _y);
 };
 Enemy.prototype = Object.create(Entity.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -37,19 +38,18 @@ Enemy.prototype.update = function(dt) {
 
 //console.log("-- entered enemy update function");
 
-    //for (var i = 0; i < 551; i++) {
-      //this.x = this.x + 1;
-      //console.log("i = " + i + " x = " + this.x);
-    //}
-
-    //if (this.x <= 550) {
-      this.x = this.x + (100 * dt);
-      console.log("DT = " + dt);
-    //}
-
     if (this.x > 550) {
-      this.x = -125;
+      this.x = -150;
+      this.y = bugRowArray[GetRandomNumber(0, 2)];
+      this.speed = GetRandomNumber(100, 200);
+    } else {
+      this.x = this.x + (this.speed * dt);
     }
+
+//console.log("Current Enemy Speed = " + this.speed);
+//console.log("Current Enemy X = " + this.x);
+//console.log("Current Enemy Y = " + this.y);
+
 
 //console.log("***** EXITING ENEMY UPDATE FUNCTION *****");
 
@@ -97,10 +97,13 @@ var bugRowArray = [60, 140, 220];
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy('images/enemy-bug.png', 0, bugRowArray[GetRandomNumber(3)]);
-var enemy2 = new Enemy('images/enemy-bug.png', 0, bugRowArray[GetRandomNumber(3)]);
+var enemy1 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy2 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy3 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy4 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy5 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
 var player = new Player('images/char-boy.png', 200, 380);
-var allEnemies = [enemy1, enemy2];
+var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
