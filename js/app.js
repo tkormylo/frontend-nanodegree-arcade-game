@@ -3,6 +3,30 @@ function GetRandomNumber(min, max) {
   return randomNumber;
 };
 
+// TSK: PickupItem object base class
+var PickupItem = function (_pickupItemImg, _pickupItemX, _pickupItemY) {
+  this.image = _pickupItemImg;
+  this.x = _pickupItemX;
+  this.y = _pickupItemY;
+};
+
+PickupItem.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.image), this.x, this.y);
+};
+
+var Gem = function (_gemImage, _gemXLocation, _gemYLocation) {
+  PickupItem.call(this, _gemImage, _gemXLocation, _gemYLocation);
+};
+Gem.prototype = Object.create(PickupItem.prototype);
+Gem.prototype.constructor = Gem;
+Gem.prototype.checkIfTouchingPlayer = function(player, gem) {
+  if (player.x === gem.x && player.y === gem.y) {
+    gem.image = gemImageArray[GetRandomNumber(0, (gemImageArray.length - 1))];
+    gem.x = gemXLocArray[GetRandomNumber(0, (gemXLocArray.length - 1))];
+    gem.y = gemYLocArray[GetRandomNumber(0, (gemYLocArray.length - 1))];
+  }
+};
+
 // Entity object base class
 var Entity = function(spriteImg, x, y) {
   this.sprite = spriteImg;
@@ -44,7 +68,7 @@ Enemy.prototype.update = function(dt) {
 // current movement speed.
     if (this.x > 550) {
       this.x = -150;
-      this.y = bugRowArray[GetRandomNumber(0, 2)];
+      this.y = bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))];
       this.speed = GetRandomNumber(100, 200);
     } else {
       this.x = this.x + (this.speed * dt);
@@ -82,7 +106,6 @@ Player.prototype.update = function() {
   }
 };
 
-
 // TSK: Take the key input and move the player
 //      according to the direction pressed.
 //      If the player position does not allow that move
@@ -104,17 +127,23 @@ Player.prototype.handleInput = function(keyPressed) {
 };
 
 var bugRowArray = [60, 140, 220];
+var gemXLocArray = [0, 100, 200, 300, 400];
+var gemYLocArray = [60, 140, 220];
+var gemImageArray = ['images/Gem Blue.png', 'images/Gem Green.png', 'images/Gem Orange.png'];
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy2 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy3 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy4 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy5 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy1 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
+var enemy2 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
+var enemy3 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
+var enemy4 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
+var enemy5 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
 var player = new Player('images/char-boy.png', 200, 380);
+var gem1 = new Gem(gemImageArray[GetRandomNumber(0, (gemImageArray.length - 1))], gemXLocArray[GetRandomNumber(0, (gemXLocArray.length - 1))], gemYLocArray[GetRandomNumber(0, (gemYLocArray.length - 1))]);
+
 var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
+var allPickupItems = [gem1];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
