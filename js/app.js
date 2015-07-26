@@ -38,6 +38,10 @@ Enemy.prototype.update = function(dt) {
 
 //console.log("-- entered enemy update function");
 
+// TSK: Check enemy position and if off right edge of canvas, randomize
+// Y position and speed and reset back to start X position.
+// If not off screen, continue to move across screen by
+// current movement speed.
     if (this.x > 550) {
       this.x = -150;
       this.y = bugRowArray[GetRandomNumber(0, 2)];
@@ -50,15 +54,16 @@ Enemy.prototype.update = function(dt) {
 //console.log("Current Enemy X = " + this.x);
 //console.log("Current Enemy Y = " + this.y);
 
-
 //console.log("***** EXITING ENEMY UPDATE FUNCTION *****");
-
 };
 
-// Draw the enemy on the screen, required method for game
-//Enemy.prototype.render = function() {
-    //ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-//}
+Enemy.prototype.checkIfTouchingPlayer = function(enemyX, enemyY, playerX, playerY, player) {
+  if (enemyY === playerY && (enemyX >= (playerX -40) && (enemyX <= (playerX + 40)))) {
+    player.x = 200;
+    player.y = 380;
+    console.log("***HIT!!***");
+  }
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -72,6 +77,7 @@ Player.prototype = Object.create(Entity.prototype);
 Player.prototype.constructor = Player;
 Player.prototype.update = function() {
 };
+
 
 // TSK: Take the key input and move the player
 //      according to the direction pressed.
@@ -97,11 +103,11 @@ var bugRowArray = [60, 140, 220];
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy2 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy3 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy4 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
-var enemy5 = new Enemy('images/enemy-bug.png', 100, 0, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy1 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy2 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy3 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy4 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
+var enemy5 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, 2)]);
 var player = new Player('images/char-boy.png', 200, 380);
 var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 
