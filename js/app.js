@@ -1,42 +1,53 @@
 function GetRandomNumber(min, max) {
-  var randomNumber = Math.floor(Math.random()*(max-min+1)+min);
-  return randomNumber;
+    var randomNumber = Math.floor(Math.random()*(max-min+1)+min);
+    return randomNumber;
 };
 
+// TSK: ScoreBoard object base class
+var ScoreBoard = function(_score) {
+    score = _score;
+}
+ScoreBoard.prototype.render = function() {
+    ctx.clearRect(10, 600, 100, -14);
+    ctx.font="18px Arial";
+    ctx.fillText("Score: " + score, 10, 600);
+}
+
 // TSK: PickupItem object base class
-var PickupItem = function (_pickupItemImg, _pickupItemX, _pickupItemY) {
-  this.image = _pickupItemImg;
-  this.x = _pickupItemX;
-  this.y = _pickupItemY;
+var PickupItem = function(_pickupItemImg, _pickupItemX, _pickupItemY) {
+    this.image = _pickupItemImg;
+    this.x = _pickupItemX;
+    this.y = _pickupItemY;
 };
 
 PickupItem.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.image), this.x, this.y);
+    ctx.drawImage(Resources.get(this.image), this.x, this.y);
 };
 
 var Gem = function (_gemImage, _gemXLocation, _gemYLocation) {
-  PickupItem.call(this, _gemImage, _gemXLocation, _gemYLocation);
+    PickupItem.call(this, _gemImage, _gemXLocation, _gemYLocation);
 };
 Gem.prototype = Object.create(PickupItem.prototype);
 Gem.prototype.constructor = Gem;
 Gem.prototype.checkIfTouchingPlayer = function(player, gem) {
-  if (player.x === gem.x && player.y === gem.y) {
-    gem.image = gemImageArray[GetRandomNumber(0, (gemImageArray.length - 1))];
-    gem.x = gemXLocArray[GetRandomNumber(0, (gemXLocArray.length - 1))];
-    gem.y = gemYLocArray[GetRandomNumber(0, (gemYLocArray.length - 1))];
-  }
+    if (player.x === gem.x && player.y === gem.y) {
+      score = score + 100;
+      gem.image = gemImageArray[GetRandomNumber(0, (gemImageArray.length - 1))];
+      gem.x = gemXLocArray[GetRandomNumber(0, (gemXLocArray.length - 1))];
+      gem.y = gemYLocArray[GetRandomNumber(0, (gemYLocArray.length - 1))];
+    }
 };
 
 // Entity object base class
 var Entity = function(spriteImg, x, y) {
-  this.sprite = spriteImg;
-  this.x = x;
-  this.y = y;
+    this.sprite = spriteImg;
+    this.x = x;
+    this.y = y;
 };
 
 // Entity objects base class
 Entity.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Enemies our player must avoid
@@ -82,18 +93,19 @@ Enemy.prototype.update = function(dt) {
 };
 
 Enemy.prototype.checkIfTouchingPlayer = function(enemyX, enemyY, playerX, playerY, player) {
-  if (enemyY === playerY && (enemyX >= (playerX -40) && (enemyX <= (playerX + 40)))) {
-    player.x = 200;
-    player.y = 380;
-  }
+    if (enemyY === playerY && (enemyX >= (playerX -40) && (enemyX <= (playerX + 40)))) {
+      player.x = 200;
+      player.y = 380;
+      score = 0;
+    }
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(sprite, x, y) {
-  Entity.call(this, sprite, x, y);
-  this.sprite = sprite;
+    Entity.call(this, sprite, x, y);
+    this.sprite = sprite;
 };
 
 Player.prototype = Object.create(Entity.prototype);
@@ -101,29 +113,28 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function() {
     // TSK: If player is in the water (player.y = -20) then reset player (death).
     if (player.y === -20) {
-    player.x = 200;
-    player.y = 380;
-  }
+      player.x = 200;
+      player.y = 380;
+    }
 };
 
-// TSK: Take the key input and move the player
-//      according to the direction pressed.
-//      If the player position does not allow that move
-//      do not move the player.
+//  TSK: Take the key input and move the player
+//  according to the direction pressed.
+//  If the player position does not allow that move
+//  do not move the player.
 Player.prototype.handleInput = function(keyPressed) {
-
-  if (keyPressed === 'left' && player.x > 50 && player.x <= 400) {
-    player.x = player.x - 100;
-  }
-  else if (keyPressed === 'right' && player.x < 400) {
-    player.x = player.x + 100;
-  }
-  else if (keyPressed === 'up' && player.y > -20) {
-    player.y = player.y - 80;
-  }
-  else if (keyPressed === 'down' && player.y < 380) {
-    player.y = player.y + 80;
-  }
+    if (keyPressed === 'left' && player.x > 50 && player.x <= 400) {
+      player.x = player.x - 100;
+    }
+    else if (keyPressed === 'right' && player.x < 400) {
+      player.x = player.x + 100;
+    }
+    else if (keyPressed === 'up' && player.y > -20) {
+      player.y = player.y - 80;
+    }
+    else if (keyPressed === 'down' && player.y < 380) {
+      player.y = player.y + 80;
+    }
 };
 
 var bugRowArray = [60, 140, 220];
@@ -141,6 +152,7 @@ var enemy4 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, 
 var enemy5 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
 var player = new Player('images/char-boy.png', 200, 380);
 var gem1 = new Gem(gemImageArray[GetRandomNumber(0, (gemImageArray.length - 1))], gemXLocArray[GetRandomNumber(0, (gemXLocArray.length - 1))], gemYLocArray[GetRandomNumber(0, (gemYLocArray.length - 1))]);
+var scoreBoard = new ScoreBoard(0);
 
 var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 var allPickupItems = [gem1];
