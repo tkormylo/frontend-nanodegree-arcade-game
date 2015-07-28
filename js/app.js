@@ -141,6 +141,7 @@ var bugRowArray = [60, 140, 220];
 var gemXLocArray = [0, 100, 200, 300, 400];
 var gemYLocArray = [60, 140, 220];
 var gemImageArray = ['images/Gem Blue.png', 'images/Gem Green.png', 'images/Gem Orange.png'];
+var spriteImgArray = ['images/char-boy.png', 'images/char-cat-girl.png', 'images/char-horn-girl.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -150,7 +151,7 @@ var enemy2 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, 
 var enemy3 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
 var enemy4 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
 var enemy5 = new Enemy('images/enemy-bug.png', GetRandomNumber(100, 200), -150, bugRowArray[GetRandomNumber(0, (bugRowArray.length - 1))]);
-var player = new Player('images/char-boy.png', 200, 380);
+var player = new Player(spriteImgArray[GetRandomNumber(0, (spriteImgArray.length - 1))], 200, 380);
 var gem1 = new Gem(gemImageArray[GetRandomNumber(0, (gemImageArray.length - 1))], gemXLocArray[GetRandomNumber(0, (gemXLocArray.length - 1))], gemYLocArray[GetRandomNumber(0, (gemYLocArray.length - 1))]);
 var scoreBoard = new ScoreBoard(0);
 
