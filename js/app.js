@@ -1,5 +1,5 @@
 // TSK: Generate random number
-function GetRandomNumber(min, max) {
+var GetRandomNumber = function(min, max) {
     var randomNumber = Math.floor(Math.random()*(max-min+1)+min);
     return randomNumber;
 };
@@ -7,13 +7,14 @@ function GetRandomNumber(min, max) {
 // TSK: ScoreBoard object base class
 var ScoreBoard = function(_score) {
     score = _score;
-}
+};
+
 // TSK: Render the score to the canvas
 ScoreBoard.prototype.render = function() {
     ctx.clearRect(10, 600, 100, -14);
     ctx.font="18px Arial";
     ctx.fillText("Score: " + score, 10, 600);
-}
+};
 
 // TSK: PickupItem object base class
 var PickupItem = function(_pickupItemImg, _pickupItemX, _pickupItemY) {
@@ -21,6 +22,7 @@ var PickupItem = function(_pickupItemImg, _pickupItemX, _pickupItemY) {
     this.x = _pickupItemX;
     this.y = _pickupItemY;
 };
+
 // TSK: Render pickup item(s) (such as a gem).
 PickupItem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.image), this.x, this.y);
